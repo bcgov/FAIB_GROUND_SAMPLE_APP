@@ -51,13 +51,14 @@ ui <- tagList(
                           column(width = 9, box(width=NULL,leafletOutput("map", height = 550)),
                                  box(height = 390, width=NULL,tabBox(width = NULL,
                                                                          # The id lets us use input$tabset1 on the server to find the current tab
-                                                                         id = "tabset1", height = "0",
+                                                                         id = "tabset1", height = "0"
+                                                                     ,
                                                                          tabPanel("Volume/Age",  plotlyOutput('age', height = "250px"))
                                                                      # ####FOR DEBUG####
-                                                                     # ,
+                                                                     ,
                                                                      # tabPanel("Volume/Age",dataTableOutput("table1")),
-                                                                     # tabPanel("Volume/Age",dataTableOutput("table2")),
-                                                                     # tabPanel("Volume/Age",dataTableOutput("table3")),
+                                                                      # tabPanel("Volume/Age",dataTableOutput("table3")),
+                                                                     #tabPanel("Memory",textOutput("Memory"))
                                                                      
                                  )
                                  
@@ -96,12 +97,12 @@ ui <- tagList(
                                                  selected = "None",
                                                  inline = FALSE),
                                 checkboxGroupInput("cbSType",
-                                                   actionLink("samplePlotsHelpGen", "Generalized Coordinates ",icon =icon("info-circle")),
+                                                   actionLink("samplePlotsHelpGen", "Generalized Coordinates ",icon =icon("info-circle",verify_fa = FALSE)),
                                                    choices = c("CMI","YSM", "NFI", "SUP"),
                                                    selected = c("CMI","YSM", "NFI", "SUP"),
                                                    inline = TRUE),
                                     checkboxGroupInput("sts",
-                                                       actionLink("samplePlotsHelpAct", "Actual Coordinates ",icon =icon("info-circle")),
+                                                       actionLink("samplePlotsHelpAct", "Actual Coordinates ",icon =icon("info-circle",verify_fa = FALSE)),
                                                        choiceNames = c("VRI","PSP Active","PSP Inactive"),
                                                        choiceValues = c("VRI","PA","PI"),
                                                        selected = c("VRI","PA","PI"),
@@ -127,7 +128,7 @@ ui <- tagList(
                                     #                    selected = c("NONE","GRID","RANDOM"),
                                     #                    inline = TRUE),
                                     radioButtons("prj",
-                                                 actionLink("projDesHelp", "Select Project Design ",icon =icon("info-circle")),
+                                                 actionLink("projDesHelp", "Select Project Design ",icon =icon("info-circle",verify_fa = FALSE)),
                                                  choices = c("All","YSM Main","Mat Main"),
                                                  selected = "All",
                                                  inline = TRUE)

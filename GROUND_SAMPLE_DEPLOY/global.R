@@ -21,14 +21,10 @@ library(shinydashboardPlus)
 library(leaflet.extras)
 library(leaflet)
 library(sf)
-library(ggplot2)
 library(plotly)
-# library(lwgeom)
 library(feather)
-library(rgdal)
+library(sp)
 library(waiter)
-library(gt)
-
 #-------------------------------------------------------------------------------------------------
 #Functions for retrieving data from the postgres server (vector, raster and tables)
 #-------------------------------------------------------------------------------------------------
@@ -51,21 +47,6 @@ waiter_html <- function(x){
 }
 
 br2 <- function() tagList(br(), br())
-
-getSpatialQueryIaian<-function(sql){
-  conn<-dbConnect(dbDriver("PostgreSQL"), host='206.12.91.188', dbname = 'iaian_apps', port='5432' ,user='appuser' ,password='sHcL5w9RTn8ZN3kc')
-  on.exit(dbDisconnect(conn))
-  st_read(conn, query = sql)
-}
-
-
-getTableQueryIaian<-function(sql){
-  conn<-dbConnect(dbDriver("PostgreSQL"), host='206.12.91.188', dbname = 'iaian_apps', port='5432' ,user='appuser' ,password='sHcL5w9RTn8ZN3kc')
-  on.exit(dbDisconnect(conn))
-  dbGetQuery(conn, sql)
-}
-
-
 
 myDrawPolygonOptions <- function(allowIntersection = FALSE,
                                  guidelineDistance = 20,
