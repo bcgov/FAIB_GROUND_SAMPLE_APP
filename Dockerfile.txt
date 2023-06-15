@@ -1,66 +1,23 @@
-FROM rocker/geospatial:4.1
+FROM rocker/shiny:3.5.1
 
-WORKDIR /srv/shiny-server
+RUN apt-get update && apt-get install libgdal-dev libpq-dev libudunits2-dev libproj-dev libssl-dev libcurl4-openssl-dev libv8-3.14-dev -y &&\
+  mkdir -p /var/lib/shiny-server/bookmarks/shiny
 
-# system libraries of general use
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    libsodium-dev \
-#    libmariadbclient-dev \
-    libudunits2-dev \
-#    libgdal-dev \
-#    libproj-dev \
-    vim \
-    curl \
-    git \
-    fonts-roboto \
-    ghostscript \
-    libssl-dev \
-    libxml2-dev \
-    gdebi-core \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/ \
-  ## Upgrade shiny server
-  && wget --no-verbose https://download3.rstudio.org/ubuntu-14.04/x86_64/VERSION -O "version.txt" \
-  && VERSION=$(cat version.txt) \
-  && wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-$VERSION-amd64.deb \
-  && wget --no-verbose "https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-$VERSION-amd64.deb" -O ss-latest.deb \
-  && gdebi -n ss-latest.deb \
-  && rm -f version.txt ss-latest.deb \
-  && install2.r --error tinytex \
-  ## Admin-based install of TinyTeX:
-  && wget -qO- \
-    "https://github.com/yihui/tinytex/raw/main/tools/install-unx.sh" | \
-    sh -s - --admin --no-path \
-  && mv ~/.TinyTeX /opt/TinyTeX \
-  && if /opt/TinyTeX/bin/*/tex -v | grep -q 'TeX Live 2018'; then \
-      ## Patch the Perl modules in the frozen TeX Live 2018 snapshot with the newer
-      ## version available for the installer in tlnet/tlpkg/TeXLive, to include the
-      ## fix described in https://github.com/yihui/tinytex/issues/77#issuecomment-466584510
-      ## as discussed in https://www.preining.info/blog/2019/09/tex-services-at-texlive-info/#comments
-      wget -P /tmp/ ${CTAN_REPO}/install-tl-unx.tar.gz \
-      && tar -xzf /tmp/install-tl-unx.tar.gz -C /tmp/ \
-      && cp -Tr /tmp/install-tl-*/tlpkg/TeXLive /opt/TinyTeX/tlpkg/TeXLive \
-      && rm -r /tmp/install-tl-*; \
-    fi \
-  && /opt/TinyTeX/bin/*/tlmgr path add \
-  && tlmgr install ae colortbl environ fancyhdr fontaxes grfext inconsolata listings makecell metafont mfware multirow parskip pdfcrop pdflscape ragged2e roboto setspace tabu tex threeparttable threeparttablex trimspaces ulem varwidth wrapfig \
-  && tlmgr path add \
-  && Rscript -e "tinytex::r_texmf()" \
-  && chown -R root:staff /opt/TinyTeX \
-  && chmod -R g+w /opt/TinyTeX \
-  && chmod -R g+wx /opt/TinyTeX/bin \
-  && echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron \
-  && install2.r --error PKI \
-  && cd /tmp/ \
-  && wget https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-amd64.deb \
-  && DEB="/tmp/pandoc-2.16.2-1-amd64.deb" \
-  && sudo dpkg -i $DEB \
-  && rm -rf /srv/shiny-server/
+RUN apt-get clean
 
-COPY ./ /srv/shiny-server/
+# Download and install library
+RUN R -e "install.packages(c('shiny','shinydashboard','shinydashboardPlus', 'shinyBS', 'bsplus', 'shinyjs', 'V8', 'shinythemes', 'shinyWidgets', 'igraph', 'leaflet', 'leaflet.extras', 'dplyr', 'ggplot2', 'RPostgreSQL', 'rpostgis', 'sf', 'zoo','tidyr','plotly','lobstr', 'sp', 'waiter', 'feather'))"
 
-RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))" \
-    && R -e "remotes::install_github('rstudio/renv@0.15.4')" \
-    && R -e "setwd('/srv/shiny-server/'); renv::restore();"
+# copy the app to the image 
+COPY server.R /srv/shiny-server/
+COPY ui.R /srv/shiny-server/
+COPY global.R /srv/shiny-server/
+COPY /www /srv/shiny-server/www
+
+
+# make all app files readable (solves issue when dev in Windows, but building in Ubuntu)
+RUN sudo chown -R shiny:shiny /srv/shiny-server/
 
 EXPOSE 3838
+
+CMD ["/usr/bin/shiny-server.sh"]
