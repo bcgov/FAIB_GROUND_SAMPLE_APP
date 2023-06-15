@@ -8,10 +8,7 @@ server <- function(input, output, session) {
   filemap <- div(fileInput(placeholder = "shp,dbf,shx",width = 185 ,inputId = "filemap", label = "Upload Shapefile", multiple = TRUE, accept = c("shp","dbf", "shx", "sbn", "sbx", "prj", "xml","cpg")))
   filemap <- absolutePanel(filemap, right = -166, top = -100, fixed = FALSE, width = -200 , height = "100%")
 
-  #----------------  
-  # Reactive Values 
-   valueModal<-reactiveValues(atTable=NULL)
-
+  ###################FUNCTION##################
   #Filter based on drawn value
   sp_from_draw <- function(){
     if(!is.null(input$map_draw_all_features) & !is.null(drawnPolys()) & !is.null(sp_samplePoints_r()) ){
@@ -64,15 +61,15 @@ server <- function(input, output, session) {
   #
   
   #################
-  table1 <-reactive({
-      table1 <- data.frame(input$sts)
-
-  })
-  
-  table2 <-reactive({
-    table2 <- data.frame(input$cbSType)
-    
-  })
+  # table1 <-reactive({
+  #     table1 <- data.frame(input$sts)
+  # 
+  # })
+  # 
+  # table2 <-reactive({
+  #   table2 <- data.frame(input$cbSType)
+  # 
+  # })
   ###########
   
   
@@ -130,7 +127,7 @@ server <- function(input, output, session) {
         
         polys<-list()
         for (i in 1:length(Longitudes)){
-          polys[[i]]<- Polygons(list(Polygon(cbind(Longitudes[[i]], Latitudes[[i]]))), ID=f$features[[i]]$properties$`_leaflet_id` )}
+          polys[[i]]<- sp::Polygons(list(Polygon(cbind(Longitudes[[i]], Latitudes[[i]]))), ID=f$features[[i]]$properties$`_leaflet_id` )}
         
         spPolys<-SpatialPolygons(polys)
         proj4string(spPolys)<-"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
@@ -229,10 +226,16 @@ server <- function(input, output, session) {
   
   #--------  
   # Outputs 
-  output$table1 <- renderDataTable(req(table1()))
-  output$table2 <- renderDataTable(req(table2()))
-  output$table3 <- renderDataTable(req( sp_samplePoints_r()))
+  # output$table1 <- renderDataTable(req(table1()))
+  # output$table2 <- renderDataTable(req(table2()))
+   #output$table3 <- renderDataTable(req( sp_samplePoints_r()))
  
+  # memUsed <- function() {paste0(round(mem_used()/1000000,3)," mb")}
+  
+  # output$"Memory"<-renderText({
+  #   invalidateLater(10)
+  #   memUsed()
+  # })
   
   
   ## Create scatterplot object the plotOutput function is expecting
@@ -298,7 +301,7 @@ server <- function(input, output, session) {
         map.fitBounds(groupLayer.getBounds());}")  
        ))
     
-    Sys.sleep(10)
+    Sys.sleep(3)
     waiter::waiter_hide()
     return(m)
 
