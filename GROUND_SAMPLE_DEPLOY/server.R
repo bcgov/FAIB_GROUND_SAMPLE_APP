@@ -346,6 +346,164 @@ server <- function(input, output, session) {
 
         # ggplotly(p) %>%
         p} })
+
+    output$species <- renderPlotly({
+      if (!is.null(data)){
+        
+        spdata <- strsplit(gsub(" ", "", paste(data$spb_cpct_ls, collapse = '')), 
+                           "(?=[A-Za-z])(?<=[0-9])|(?=[0-9])(?<=[A-Za-z])", perl=TRUE)
+        
+        spdata<-data.frame(matrix(Reduce(rbind, spdata), ncol=2, byrow=T))
+        spdata$X2 <- as.numeric(spdata$X2)
+        spdataagg<-aggregate(X2~X1, data=spdata, FUN=sum)
+        setDT(spdataagg)[, percent:= X2/sum(X2)*100]
+        spdataagg<-spdataagg[order(-percent)]
+        
+        p <- plot_ly(
+          data=spdataagg[1:10,],
+          x = ~reorder(X1, -X2),
+          y = ~percent,
+          type = 'bar',
+          color = ~X1,
+          colors = colorRampPalette(RColorBrewer::brewer.pal(8, "Set2"))(10)
+        )
+        
+        if (dim(spdataagg)[1]>10) {
+          p <- p %>% add_annotations(x= 0.1, y = 0.9,  
+                                     xref = "paper",
+                                     yref = "paper", showarrow = F,
+                                     text = "*Only the ten most frequently occurring species are displayed.")
+        }
+        
+        # ggplotly(p) %>%
+        p %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Species", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(title = "% of Total Live BA"))) %>%
+          config(displayModeBar = F)}
+      
+      else{
+        
+        
+        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+                     y = dummyData$wsvha_liv,
+                     type = "scatter",
+                     mode = "markers") %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Species", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(range = c(0, 100),title = "% of Total Live BA")))%>%
+          config(displayModeBar = F)
+        
+        # ggplotly(p) %>%
+        p} })
+
+    output$BAbyyear <- renderPlotly({
+      if (!is.null(data)){
+        
+        sampleID <- sort(unique(data$samp_id))
+        sampleData <- subset(sampleData, SITE_IDENTIFIER %in% sampleID & MEAS_YR >=2013)
+        
+        baagg<-aggregate(cbind(BA_HA_LS,BA_HA_DS) ~ MEAS_YR, data = sampleData, FUN = mean, na.rm = TRUE)
+        
+        p <- plot_ly(
+          data = baagg,
+          x = ~MEAS_YR,
+          y = ~BA_HA_LS,
+          type = 'bar',
+          name = "Live Standing"
+        )
+        p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
+        p <- p %>% layout(yaxis = list(title = 'Mean BA (m2/ha)'), barmode = 'group', xaxis = list(title = "Year"))
+        
+        # ggplotly(p) %>%
+        p %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(2012.5, 2023.5), title = "Year", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(title = "Mean BA (m2/ha)")))%>%
+          config(displayModeBar = F)}
+      
+      else{
+        
+        
+        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+                     y = dummyData$wsvha_liv,
+                     type = "scatter",
+                     mode = "markers") %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(2013, 2023), title = "Year", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(range = c(0, 100),title = "Mean BA (m2/ha)")))%>%
+          config(displayModeBar = F)
+        
+        # ggplotly(p) %>%
+        p} })
+    
+    
+    output$BEC <- renderPlotly({
+      if (!is.null(data)){
+        
+        becdat<-as.data.frame(prop.table(table(data$bgc_zone)))
+        
+        p <- plot_ly(
+          data = becdat,
+          labels = ~Var1, values = ~Freq, type = 'pie'
+        )
+        
+        p <- p %>% layout(xaxis = list(title = "BEC"))
+        
+        # ggplotly(p) %>%
+        p %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "BEC", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
+          config(displayModeBar = F)}
+      
+      else{
+        
+        
+        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+                     y = dummyData$wsvha_liv,
+                     type = "scatter",
+                     mode = "markers") %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "BEC", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
+          config(displayModeBar = F)
+        
+        # ggplotly(p) %>%
+        p} })
+    
+    
+    output$Samples <- renderPlotly({
+      if (!is.null(data)){
+        
+        sampletypedat<-as.data.frame(table(data$meas_dt, data$sampletype))
+        
+        p <- plot_ly(
+          data = sampletypedat,
+          x = ~as.numeric(as.character(Var1)),  
+          type = 'bar',
+          y = ~Freq,
+          name = ~Var2,
+          color = ~Var2
+        ) %>% layout(barmode = 'stack', xaxis = list(title = "Year"), yaxis = list(title = "Measurement Count"))
+        
+        # ggplotly(p) %>%
+        p %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
+          config(displayModeBar = F)}
+      
+      else{
+        
+        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+                     y = dummyData$wsvha_liv,
+                     type = "scatter",
+                     mode = "markers") %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(range = c(0, 100),title = "Measurement Count")))%>%
+          config(displayModeBar = F)
+        
+        # ggplotly(p) %>%
+        p} })
     
      }
 
