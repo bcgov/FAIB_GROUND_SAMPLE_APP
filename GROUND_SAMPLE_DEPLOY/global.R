@@ -25,6 +25,7 @@ library(plotly)
 library(feather)
 library(sp)
 library(waiter)
+library(data.table)
 #-------------------------------------------------------------------------------------------------
 #Functions for retrieving data from the postgres server (vector, raster and tables)
 #-------------------------------------------------------------------------------------------------
@@ -84,6 +85,8 @@ sampleTypes <-  sort(unique(sp_samplePoints$sampletype))
 tsaBnds <- sort(unique(sp_samplePoints$tsa_desc ))
 becLst <- sort(unique(sp_samplePoints$bgc_zone ))
 prjdes <- sort(unique(sp_samplePoints$project_design ))
+
+sampleData <- read_feather("www//export_ground_samples")
 
 dummyData <- head(subset(as.data.frame(sp_samplePoints), select = c(tot_stand_age, wsvha_liv)),1)
 dummyData[,c("tot_stand_age", "wsvha_liv" )] <- 0
