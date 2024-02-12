@@ -55,7 +55,10 @@ ui <- tagList(
                                                                      ,
                                                                          tabPanel("Volume/Age",  plotlyOutput('age', height = "250px"))
                                                                      # ####FOR DEBUG####
-                                                                     ,
+                                                                     ,   tabPanel("Species",  plotlyOutput('species', height = "250px"))
+                                                                     ,   tabPanel("BA by Year",  plotlyOutput('BAbyyear', height = "250px"))
+                                                                     ,   tabPanel("BEC Zone",  plotlyOutput('BEC', height = "250px"))
+                                                                     ,   tabPanel("Measurement",  plotlyOutput('Samples', height = "250px"))
                                                                      # tabPanel("Volume/Age",dataTableOutput("table1")),
                                                                       # tabPanel("Volume/Age",dataTableOutput("table3")),
                                                                      #tabPanel("Memory",textOutput("Memory"))
