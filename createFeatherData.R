@@ -74,8 +74,8 @@ colnames(spatial) <- c("objectid",
 
 
 spatial$psp_act <- ''
-spatial$psp_act[spatial$psp_status == 'Active' & spatial$sampletype == 'PSP'] <- 'PA'
-spatial$psp_act[spatial$psp_status == 'Inactive' & spatial$sampletype == 'PSP'] <- 'PI'
+spatial$psp_act[spatial$psp_status == 'A' & spatial$sampletype == 'PSP'] <- 'PA'
+spatial$psp_act[spatial$psp_status == 'IA' & spatial$sampletype == 'PSP'] <- 'PI'
 spatial$psp_act[spatial$sampletype == 'VRI'] <- 'VRI'
 spatial$wsvha_liv <- as.integer(round(spatial$vha_wsv_ls)) 
 spatial$wsvha_liv[is.na(spatial$vha_wsv_ls)] <- 0
