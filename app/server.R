@@ -197,14 +197,17 @@ server <- function(input, output, session) {
           file.rename(shpdf$datapath[i], paste0(tempdirname, "/", shpdf$name[i]))
         }
         tryCatch(
-          {outShp <-  spTransform(readOGR(paste(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), CRS("+init=epsg:4326"))},
+          #{outShp <-  spTransform(readOGR(paste0(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), CRS("+init=epsg:4326"))},
+          {outShp <-  st_transform(st_read(paste(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), 4326)}
+          ,
           error=function(cond) {
             shpValid <- FALSE
             showModal(warningModal)
             outShp <- NULL
             message("Here's the original error message:")
 
-          },
+          }
+          ,
           finally ={print ("shape done")}
         )
       }

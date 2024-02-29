@@ -1,0 +1,12 @@
+name: test2_faib_ground
+title: test2_faib_ground
+username: bcgov-env
+account: bcgov-env
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11370765
+bundleId: 8313907
+url: https://bcgov-env.shinyapps.io/test2_faib_ground/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
