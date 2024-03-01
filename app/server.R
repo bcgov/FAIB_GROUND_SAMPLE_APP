@@ -372,7 +372,7 @@ server <- function(input, output, session) {
         )
         
         if (dim(spdataagg)[1]>10) {
-          p <- p %>% add_annotations(x= 0.1, y = 0.9,  
+          p <- p %>% add_annotations(x= 0.9, y = 0.9,  
                                      xref = "paper",
                                      yref = "paper", showarrow = F,
                                      text = "*Only the ten most frequently occurring species are displayed.")
@@ -503,6 +503,48 @@ server <- function(input, output, session) {
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
                    yaxis = (list(range = c(0, 100),title = "Measurement Count")))%>%
+          config(displayModeBar = F)
+        
+        # ggplotly(p) %>%
+        p} })
+    
+    
+    output$MeasCount <- renderPlotly({
+      if (!is.null(data)){
+        
+        sampleID <- sort(unique(data$samp_id))
+        #tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID))
+        tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID & LAST_MSMT =="Y"))
+        
+        meascount <- tabledata[, .N, by = list(VISIT_NUMBER, SAMPLE_ESTABLISHMENT_TYPE)]
+        
+        p <- plot_ly(
+          data = meascount,
+          x = ~VISIT_NUMBER,
+          y = ~N,
+          color= ~SAMPLE_ESTABLISHMENT_TYPE,
+          type = 'bar'
+        ) 
+        
+        #p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
+        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number"))
+        
+        # ggplotly(p) %>%
+        p %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(title = "Visit Number", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(title = "Count")))%>%
+          config(displayModeBar = F)}
+      
+      else{
+        
+        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+                     y = dummyData$wsvha_liv,
+                     type = "scatter",
+                     mode = "markers") %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 10), title = "Visit Number", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(range = c(0, 100),title = "Count")))%>%
           config(displayModeBar = F)
         
         # ggplotly(p) %>%

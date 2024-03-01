@@ -49,23 +49,26 @@ ui <- tagList(
                             tags$style(HTML('#projDesHelp{color:black}'))
                           ),
                           column(width = 9, box(width=NULL,leafletOutput("map", height = 550)),
-                                 box(height = 390, width=NULL,tabBox(width = NULL,
-                                                                         # The id lets us use input$tabset1 on the server to find the current tab
-                                                                         id = "tabset1", height = "0"
-                                                                     ,
-                                                                         tabPanel("Volume/Age",  plotlyOutput('age', height = "250px"))
-                                                                     ,   tabPanel("Species",  plotlyOutput('species', height = "250px"))
-                                                            #,   tabPanel("BA by Year",  plotlyOutput('BAbyyear', height = "250px"))
-                                                            ,   tabPanel("BEC Zone",  plotlyOutput('BEC', height = "250px"))
-                                                            ,   tabPanel("Last Measurement Year",  plotlyOutput('Samples', height = "250px"))
-                                                                     # ####FOR DEBUG####
-                                                                     ,
-                                                                     # tabPanel("Volume/Age",dataTableOutput("table1")),
-                                                                      # tabPanel("Volume/Age",dataTableOutput("table3")),
-                                                                     #tabPanel("Memory",textOutput("Memory"))
-                                                                     
-                                 )
-                                 
+                                 box(width=NULL, height = 260,
+                                     title=h3("Ground Sample Description at Last Measurement", 
+                                              style = 'font-size:14px;color:black;font-weight:bold;'),
+                                     tabBox(width = NULL,
+                                            # The id lets us use input$tabset1 on the server to find the current tab
+                                            id = "tabset1"#, height = "0"
+                                            , tabPanel("Volume/Age",  plotlyOutput('age', height = "250px"))
+                                            , tabPanel("Species",  plotlyOutput('species', height = "250px"))
+                                            #, tabPanel("BA by Year",  plotlyOutput('BAbyyear', height = "250px"))
+                                            , tabPanel("BEC Zone",  plotlyOutput('BEC', height = "250px"))
+                                            , tabPanel("Last Measurement",  plotlyOutput('Samples', height = "250px"))
+                                            # ####FOR DEBUG####
+                                            , tabPanel("Measurement Count",  plotlyOutput('MeasCount', height = "250px"))
+                                            ,
+                                            # tabPanel("Volume/Age",dataTableOutput("table1")),
+                                            # tabPanel("Volume/Age",dataTableOutput("table3")),
+                                            #tabPanel("Memory",textOutput("Memory"))
+                                            
+                                     )
+                                     
                                  )
                           ),
                           
