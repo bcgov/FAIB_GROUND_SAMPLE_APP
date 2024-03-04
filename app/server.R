@@ -332,7 +332,7 @@ server <- function(input, output, session) {
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Age", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
-                   yaxis = (list(title = expression('Whole Stem Volume/ha'~~('m'^3)))))%>%
+                   yaxis = (list(title = "Whole Stem Volume/ha (m3)")))%>%
           config(displayModeBar = F)}
 
       else{
