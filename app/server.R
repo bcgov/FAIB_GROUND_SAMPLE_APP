@@ -332,7 +332,7 @@ server <- function(input, output, session) {
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Age", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
-                   yaxis = (list(title = "Volume (m3)")))%>%
+                   yaxis = (list(title = expression('Whole Stem Volume/ha'~~('m'^3)))))%>%
           config(displayModeBar = F)}
 
       else{
@@ -359,7 +359,7 @@ server <- function(input, output, session) {
         spdata<-data.frame(matrix(Reduce(rbind, spdata), ncol=2, byrow=T))
         spdata$X2 <- as.numeric(spdata$X2)
         spdataagg<-aggregate(X2~X1, data=spdata, FUN=sum)
-        setDT(spdataagg)[, percent:= X2/sum(X2)*100]
+        setDT(spdataagg)[, percent:= round(X2/sum(X2)*100, 2)]
         spdataagg<-spdataagg[order(-percent)]
         
         p <- plot_ly(
@@ -448,7 +448,7 @@ server <- function(input, output, session) {
         
         p <- plot_ly(
           data = becdat,
-          labels = ~Var1, values = ~Freq, type = 'pie'
+          labels = ~Var1, values = ~round(Freq, 2), type = 'pie'
         )
         
         p <- p %>% layout(xaxis = list(title = "BEC"))
@@ -527,7 +527,7 @@ server <- function(input, output, session) {
         ) 
         
         #p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
-        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number"))
+        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number", tickformat=',d'))
         
         # ggplotly(p) %>%
         p %>%
