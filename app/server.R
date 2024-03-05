@@ -197,14 +197,17 @@ server <- function(input, output, session) {
           file.rename(shpdf$datapath[i], paste0(tempdirname, "/", shpdf$name[i]))
         }
         tryCatch(
-          {outShp <-  spTransform(readOGR(paste(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), CRS("+init=epsg:4326"))},
+          #{outShp <-  spTransform(readOGR(paste0(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), CRS("+init=epsg:4326"))},
+          {outShp <-  st_transform(st_read(paste(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), 4326)}
+          ,
           error=function(cond) {
             shpValid <- FALSE
             showModal(warningModal)
             outShp <- NULL
             message("Here's the original error message:")
 
-          },
+          }
+          ,
           finally ={print ("shape done")}
         )
       }
@@ -329,7 +332,7 @@ server <- function(input, output, session) {
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Age", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
-                   yaxis = (list(title = "Volume (m3)")))%>%
+                   yaxis = (list(title = "Whole Stem Volume/ha (m3)")))%>%
           config(displayModeBar = F)}
 
       else{
@@ -341,7 +344,7 @@ server <- function(input, output, session) {
                      mode = "markers") %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Age", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
-                   yaxis = (list(range = c(0, 100),title = "Volume (m3)")))%>%
+                   yaxis = (list(range = c(0, 100),title = expression('Whole Stem Volume/ha'~~('m'^3)))))%>%
           config(displayModeBar = F)
 
         # ggplotly(p) %>%
@@ -356,7 +359,7 @@ server <- function(input, output, session) {
         spdata<-data.frame(matrix(Reduce(rbind, spdata), ncol=2, byrow=T))
         spdata$X2 <- as.numeric(spdata$X2)
         spdataagg<-aggregate(X2~X1, data=spdata, FUN=sum)
-        setDT(spdataagg)[, percent:= X2/sum(X2)*100]
+        setDT(spdataagg)[, percent:= round(X2/sum(X2)*100, 2)]
         spdataagg<-spdataagg[order(-percent)]
         
         p <- plot_ly(
@@ -369,7 +372,7 @@ server <- function(input, output, session) {
         )
         
         if (dim(spdataagg)[1]>10) {
-          p <- p %>% add_annotations(x= 0.1, y = 0.9,  
+          p <- p %>% add_annotations(x= 0.9, y = 0.9,  
                                      xref = "paper",
                                      yref = "paper", showarrow = F,
                                      text = "*Only the ten most frequently occurring species are displayed.")
@@ -397,45 +400,45 @@ server <- function(input, output, session) {
         # ggplotly(p) %>%
         p} })
     
-    output$BAbyyear <- renderPlotly({
-      if (!is.null(data)){
-        
-        sampleID <- sort(unique(data$samp_id))
-        sampleData <- subset(sampleData, SITE_IDENTIFIER %in% sampleID & MEAS_YR >=2013)
-        
-        baagg<-aggregate(cbind(BA_HA_LS,BA_HA_DS) ~ MEAS_YR, data = sampleData, FUN = mean, na.rm = TRUE)
-        
-        p <- plot_ly(
-          data = baagg,
-          x = ~MEAS_YR,
-          y = ~BA_HA_LS,
-          type = 'bar',
-          name = "Live Standing"
-        )
-        p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
-        p <- p %>% layout(yaxis = list(title = 'Mean BA (m2/ha)'), barmode = 'group', xaxis = list(title = "Year"))
-        
-        # ggplotly(p) %>%
-        p %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(2012.5, 2023.5), title = "Year", automargin = TRUE)),
-                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
-                   yaxis = (list(title = "Mean BA (m2/ha)")))%>%
-          config(displayModeBar = F)}
-      
-      else{
-        
-        
-        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
-                     y = dummyData$wsvha_liv,
-                     type = "scatter",
-                     mode = "markers") %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(2013, 2023), title = "Year", automargin = TRUE)),
-                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
-                   yaxis = (list(range = c(0, 100),title = "Mean BA (m2/ha)")))%>%
-          config(displayModeBar = F)
-        
-        # ggplotly(p) %>%
-        p} })
+    #output$BAbyyear <- renderPlotly({
+    #  if (!is.null(data)){
+    #    
+    #    sampleID <- sort(unique(data$samp_id))
+    #    sampleData <- subset(sampleData, SITE_IDENTIFIER %in% sampleID & MEAS_YR >=2013)
+    #    
+    #    baagg<-aggregate(cbind(BA_HA_LS,BA_HA_DS) ~ MEAS_YR, data = sampleData, FUN = mean, na.rm = TRUE)
+    #    
+    #    p <- plot_ly(
+    #      data = baagg,
+    #      x = ~MEAS_YR,
+    #      y = ~BA_HA_LS,
+    #      type = 'bar',
+    #      name = "Live Standing"
+    #    )
+    #    p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
+    #    p <- p %>% layout(yaxis = list(title = 'Mean BA (m2/ha)'), barmode = 'group', xaxis = list(title = "Year"))
+    #    
+    #    # ggplotly(p) %>%
+    #    p %>%
+    #      layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(2012.5, 2023.5), title = "Year", automargin = TRUE)),
+    #               legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+    #               yaxis = (list(title = "Mean BA (m2/ha)")))%>%
+    #      config(displayModeBar = F)}
+    #  
+    #  else{
+    #    
+    #    
+    #    p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+    #                 y = dummyData$wsvha_liv,
+    #                 type = "scatter",
+    #                 mode = "markers") %>%
+    #      layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(2013, 2023), title = "Year", automargin = TRUE)),
+    #               legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+    #               yaxis = (list(range = c(0, 100),title = "Mean BA (m2/ha)")))%>%
+    #      config(displayModeBar = F)
+    #    
+    #    # ggplotly(p) %>%
+    #    p} })
     
     
     output$BEC <- renderPlotly({
@@ -445,7 +448,7 @@ server <- function(input, output, session) {
         
         p <- plot_ly(
           data = becdat,
-          labels = ~Var1, values = ~Freq, type = 'pie'
+          labels = ~Var1, values = ~round(Freq, 2), type = 'pie'
         )
         
         p <- p %>% layout(xaxis = list(title = "BEC"))
@@ -500,6 +503,48 @@ server <- function(input, output, session) {
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
                    yaxis = (list(range = c(0, 100),title = "Measurement Count")))%>%
+          config(displayModeBar = F)
+        
+        # ggplotly(p) %>%
+        p} })
+    
+    
+    output$MeasCount <- renderPlotly({
+      if (!is.null(data)){
+        
+        sampleID <- sort(unique(data$samp_id))
+        #tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID))
+        tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID & LAST_MSMT =="Y"))
+        
+        meascount <- tabledata[, .N, by = list(VISIT_NUMBER, SAMPLE_ESTABLISHMENT_TYPE)]
+        
+        p <- plot_ly(
+          data = meascount,
+          x = ~VISIT_NUMBER,
+          y = ~N,
+          color= ~SAMPLE_ESTABLISHMENT_TYPE,
+          type = 'bar'
+        ) 
+        
+        #p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
+        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number", tickformat=',d'))
+        
+        # ggplotly(p) %>%
+        p %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(title = "Visit Number", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(title = "Count")))%>%
+          config(displayModeBar = F)}
+      
+      else{
+        
+        p <- plot_ly(dummyData, x = dummyData$tot_stand_age,
+                     y = dummyData$wsvha_liv,
+                     type = "scatter",
+                     mode = "markers") %>%
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 10), title = "Visit Number", automargin = TRUE)),
+                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
+                   yaxis = (list(range = c(0, 100),title = "Count")))%>%
           config(displayModeBar = F)
         
         # ggplotly(p) %>%
@@ -645,7 +690,8 @@ server <- function(input, output, session) {
         content = function(fname) {
           fs <- c("data_dictionary.csv", "bc_sample_data.csv")
           where <- toString(shQuote(masterTable()$samp_id))
-          write.csv(read_feather("www/export_ground_samples")[read_feather("www/export_ground_samples")$site_identifier %in% masterTable()$samp_id,] , file = "bc_sample_data.csv")
+          #write.csv(read_feather("www/export_ground_samples")[read_feather("www/export_ground_samples")$site_identifier %in% masterTable()$samp_id,] , file = "bc_sample_data.csv")
+          write.csv(sampleData[sampleData$SITE_IDENTIFIER %in% masterTable()$samp_id,] , file = "bc_sample_data.csv")
           write.csv(read_feather("www/dataDict"), file = "data_dictionary.csv")
 
           zip(zipfile=fname, files=fs)
