@@ -481,7 +481,7 @@ server <- function(input, output, session) {
         
         p <- plot_ly(
           data = sampletypedat,
-          x = ~as.numeric(as.character(Var1)),  
+          x = ~as.integer(as.character(Var1)),  
           type = 'bar',
           y = ~Freq,
           name = ~Var2,
@@ -490,7 +490,7 @@ server <- function(input, output, session) {
         
         # ggplotly(p) %>%
         p %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE)),
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE, tickformat='d', type='category')),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
           config(displayModeBar = F)}
       
@@ -500,7 +500,7 @@ server <- function(input, output, session) {
                      y = dummyData$wsvha_liv,
                      type = "scatter",
                      mode = "markers") %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE)),
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE, tickformat='d')),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
                    yaxis = (list(range = c(0, 100),title = "Measurement Count")))%>%
           config(displayModeBar = F)
@@ -527,7 +527,7 @@ server <- function(input, output, session) {
         ) 
         
         #p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
-        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number", tickformat=',d'))
+        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number", tickformat=',d', type='category'))
         
         # ggplotly(p) %>%
         p %>%

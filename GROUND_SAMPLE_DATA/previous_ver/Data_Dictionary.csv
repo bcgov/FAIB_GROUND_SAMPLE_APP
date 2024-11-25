@@ -1,0 +1,44 @@
+Column,Description
+CLUSTR_ID,"Concatenation of the Site Identifier, type code and visit number (""SITE_IDENTIFIER"" & ""-"" & ""SAMPLE_SITE_PURPOSE_TYPE_CODE"" & ""VISIT_NUMBER"")."
+site_identifier,Unique identifier assigned to each ground sample site
+visit_number,"This is a numeric sequence that corresponds to the visit or measurement number for a given site identifier, and always begins at 1 for the initial establishment visit."
+meas_yr,Year in which the measurement activities were started.  
+first_msmt,Y/N flag to identify the first measurement of a given sample type
+last_msmt,Y/N flag to identify the last measurement of a given sample type
+sampletype,"ground sample type (CMI=change monitoring inventory sample on 20km*20km NFI grid, NFI=national forest inventory ground sample on 20km*20km NFI grid,VRI=phase2 temporary 5-point sample cluster designed based sample using PPSWR selection, YSM=young stand monitoring on a standardized intensified NFI grid (generally 5km*10km)in young stand population defined by the Phase1 inventory 15-50yr old stands, YNS=young stand monitoring on non-standard project design, SUP=supplemental ground sample on intensified NFI grid in mature population, FLT=fixed area light samples for LiDar calibration / verification, CNS=change monitoring inventory sample on non-standard project design, PSP=subjectively located permanent sample plots)."
+project_design,
+BEC_ZONE,Biogeoclimatic Ecosystem Classification (BEC) zone as defined from a spatial overlay of the BCGW WHSE_FOREST_VEGETATION.BEC_BIOGEOCLIMATIC_POLY layer.   The date the spatial overlay was completed is included in the compilation report.
+ysm_main_fm,"Y/N flag to identify if sampletype=YSM,CMI,NFI occurs in the young stand population (15-50yrs old) based on the phase 1 inventory age at time of first measurement."
+mat_main_fm,"Y/N flag to identify if sampletype=CMI,NFI,SUP occurs in the mature population (>50yrs old), based on the phase 1 inventory age at time of first measurement."
+species_class,New attribute that isn’t in the compilation output
+MEAS_DT,Date on which the measurement activities were started.  
+TFL,Tree Farm Licence (TFL) number as defined from a spatial overlay of the BCGW WHSE_ADMIN_BOUNDARIES.FADM_TFL layer.  The date the spatial overlay was completed is included in the compilation report. 
+NO_PLOTS,# of plots in the sample - This ranges from 1 to 5.  There can be an Integrated plot at the center(IPC) and up to 4 auxiliary plots.
+own_sched_descrip,"Description of generalized ownership / schedule, ref: https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/forestry/stewardship/forest-analysis-inventory/data-management/standards/generalized_forest_cover_ownership_layer2019.pdf"
+psp_status,Indicates the status of the PSP at the last measurement (active or inactive). Contact FAIB staff (gary.johansen@gov.bc.ca or anya.reid@gov.bc.ca) if there is any possible harvest conflict with active PSPs.
+grid_size,"Grid dimensions (km*km) of grid based ground sampletypes (CMI,NFI,YSM,SUP)"
+grid_base,Grid reference for all grid based sampletypes (NFI or PROVincial)
+protect_psp,All Grid and VRI samples are assumed to be N-No
+IP_UTM,"sampletype = VRI - The Universal Trans Mercator Projection (UTM) zone reference line from which the Easting distance of the point is taken. UTM system uses 60 zones, each 6 degrees of longitude wide. Captured with GPS.  sampletype = NFI,CMI,YSM - always zero. "
+IP_EAST,"sampletype = VRI - Longitudinal coordinate of the Universal Trans Mercator Projection (UTM). The co-ordinate that locates the point along a longitudinal axis of a UTM map projection.  Column is optional due to absence of data historically - only a UTM Zone may be provided.  sampletype = NFI,CMI,YSM - always zero. "
+IP_NRTH,"sampletype = VRI - Latitudinal Co-ordinate of the Universal Trans Mercator Projection (UTM). The co-ordinate that locates a point along a latitudinal axis of a UTM map projection. Captured by GPS. Column is optional due to absence of data historically - only a UTM Zone may be provided.  sampletype = NFI,CMI,YSM - always zero."
+BC_ALBERS_X,"sampletype = VRI - the derived Albers coordinate from the IP_EAST UTM coordinate.  sampletype = NFI,CMI,YSM - the derived Albers coordinate from the IP_EAST UTM coordinate rounded to the nearest kilometer.   The co-ordinate locates the point along a longitudinal axis of a Albers map projection.  "
+BC_ALBERS_Y,"sampletype = VRI - the derived Albers coordinate from the IP_NRTH UTM coordinate.  sampletype = NFI,CMI,YSM - the derived Albers coordinate from the IP_NRTH UTM coordinate rounded to the nearest kilometer.   The co-ordinate locates the point along a latitudinal axis of a Albers map projection.  "
+beclabel,"Concatenation of the Biogeoclimatic Ecosystem Classification (BEC) (BEC_ZONE, BEC_SBZ, BEC_VAR) as defined from a spatial overlay of the BCGW WHSE_FOREST_VEGETATION.BEC_BIOGEOCLIMATIC_POLY layer.   The date the spatial overlay was completed is included in the compilation report."
+SAMP_TYP,Sample Type F/V - Indicates if the sample is fixed area (F) or variable radius (V- prism or relascope).
+UTIL,"Close Utilization (CU) Limit.  The minimum tree DBH included in calculations in this table are all set at 4cm. The downloadable files  from the FTP site compiles at 4 cm, 7.5 cm, 12.5 cm, 17.5 cm and 22.5 cm.  Some attributes (e.g., net merch volume) are generally associated with a specified CU when reporting, i.e.., the net merch volume is at 12.5cm CU for PL and 17.5cm CU for other species.   "
+BA_HA_LS,"Live Standing - Basal Area Per ha.  Basal area is the cross-section area of tree stems at DBH, including bark, measured over 1 ha.  For fixed area plots,  Basal Area (m2)/Ha = Sum Of (Tree Basal Area * Tree Per Hectare Factor * Plot Wt.)/no. of plots.  For variable radius plots,  Basal Area (m2)/Ha = (BAF * no. of trees) / no. of plots."
+BA_HA_DS,"Dead Standing - Basal Area Per ha - Basal Area (m2)/Ha = Sum Of (Tree Basal Area * Tree Per Hectare Factor*Plot Wt.)/no. of plots.  This is for live trees. (same as BAF * no. of trees, with appropriate plot weights).  Basal area is the cross-section area of tree stems at DBH, including bark, measured over 1 ha"
+STEMS_HA_LS,Live Standing - Stems/Ha.  This is often referred to as density or stand density.  = [Sum (PHF_TREE) ]/No Of Plots. 
+STEMS_HA_DS,"Dead Standing - Stems/Ha = [Sum ( Phf_Tree of live trees) ]/No Of Plots, calculated at 5 standard utilization levels. This is often referred to as density or stand density."
+VHA_WSV_LS,"Live Standing - Whole stem volume (m3/ha).  Volume of the main stem, including stump and top as well as defective and decayed wood of the tree. This is often referred to as “gross volume.”"
+VHA_WSV_DS,"Dead Standing - Whole stem volume (m3/ha).  Volume of the main stem, including stump and top as well as defective and decayed wood of the tree. This is often referred to as “gross volume.”"
+VHA_NTWB_LS,"Live Standing - Net merchantable volume (m3/ha). This is the whole stem volume less top volume (@ 10cm DIB), stump volume (@ 30cm ht) and less cruiser called decay, waste and breakage."
+VHA_NTWB_DS,"Dead Standing - Net merchantable volume (m3/ha). This is the whole stem volume less top volume (@ 10cm DIB), stump volume (@ 30cm ht) and less cruiser called decay, waste and breakage."
+spc_live_1,Leading species by % basal area at a given utilization (UTIL) limit.  
+SPB_CPCT_LS,Live Standing Species Composition by Basal area - Is a list of the top 5 species by % of basal area ranked highest to lowest 
+si_m_tlso,"Mean site index (m) for T,L,S and O trees for the leading species.  This is calculated as the mean site index from each suitable site tree site index in the plot, using the default MOF site index / growth intercept equations programmed in the current published version of SINDEX3"
+ht_tlso,"Mean height of all T,L,S and O trees for the leading species."
+ageb_tlso,"Mean breast height age for the T,L,S and O trees for the leading species.  "
+aget_tlso,"Mean total age of all T,L,S and O trees for the leading species.  Total age is derived from BH age using 'years to BH functions' in the SINDEX33.DLL. "
+TSA_DESC,Timber Supply Area (TSA) description as defined from a spatial overlay of the BCGW WHSE_ADMIN_BOUNDARIES.FADM_TSA layer.  The date the spatial overlay was completed is included in the compilation report. 
