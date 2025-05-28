@@ -5,7 +5,11 @@ account: bcgov-env
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11370765
+<<<<<<< HEAD
+bundleId:
+=======
 bundleId: 8335381
+>>>>>>> 4c1aaee2e528a0be0681471c69c89663175fd3db
 url: https://bcgov-env.shinyapps.io/test2_faib_ground/
 version: 1
 asMultiple: FALSE

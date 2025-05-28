@@ -1,17 +1,17 @@
-# **Background**
+## **Background**
 The Forest Analysis and Inventory Branch (FAIB) of B.C.’s Ministry of Forests, Lands, Natural Resource Operations and Rural Development is responsible for coordinating and managing data collection and analyses from a range of different ground sampling programs. 
 Permanent Sample Plots (PSPs) provide long-term growth and yield information to support development and testing of growth-and-yield models.  Monitoring Programs including the Provincial Change Monitoring Inventory (CMI), Provincial Young Stand Monitoring (YSM) and National Forest Inventory (NFI) programs, monitor changes in growth, mortality and forest health from statistically valid populations.  Vegetation Resource Inventory (VRI) ground samples are used to audit and verify key spatial inventory attributes estimated during photo interpretation.  Collectively these programs provide valuable ground-based information for applications both within and outside government in assisting sustainable forest management decisions.
 
-# **Open Data**
+## **Open Data**
 All posted ground sample data are located on public land, maintained by FAIB, and are approved as Open Data in the BC Data Catalogue.  A series of plot level compiled attributes are available for each ground sample across repeated measurements, and summarized across a series of utilization limits.  The grid-based ground sample programs have their location co-ordinates generalized to the nearest kilometre, while the other programs include detailed location information.
 
-# **Purpose of Web App**
+## **Purpose of Web App**
 FAIB has developed a publicly accessible Geographic Information Systems (GIS) platform that hosts these data, provides custom queries for specific areas of interest, and provides download capability for compiled ground sample information.  
 
-# **Features**
+## **Features**
 A series of user-controlled filtres provides for custom queries and data export.  The results of a given query is displayed as ground sample plot location on a scale-able provincial map, and as a graph of compiled volume over age of all samples in the query.  User controlled filters include selection by ground sample type, Timber Supply Area (TSA), Biogeoclimatic Ecosystem Classification Zone of the compiled sample data.  Alternatively, a selected area can be created on the map, or a spatial boundary can be imported for clipping.  At any ground sample location, the description and summary of compiled attributes can also be viewed.
 
-# **Exported Data**
+## **Exported Data**
 When ‘export data as CSV’ is selected, the compiled plot attributes of the queried set of samples is exported to a CSV formatted file.  Two files are created: 
 
 BC_SAMPLE_DATA.CSV: 
@@ -20,16 +20,11 @@ Each record contains the plot level compiled attributes (standardized to a per h
 DATA_DICTIONARY.CSV:  
 The full list of attributes included in BC_SAMPLE_DATA.CSV is described in this data dictionary.
 
-# **References**
-Further information on FAIB’s ground sampling program, and available reports, can be found at:
-Resource Information on Provincial Monitoring Program:
-[link](https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/ground-sample-inventories/provincial-monitoring)
-YSM Technical Handouts for all available TSAs
-…link to be added
-Mature Stand Assessment Technical Handouts for all available TSAs
-… link to be added
+## **References**
+Further information on FAIB’s ground sampling program, and available reports, can be found 
+[here](https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/ground-sample-inventories/provincial-monitoring)
 
-# **Example Queries**
+## **Example Queries**
 A series of example queries are illustrated (following pages) to assist users with navigating the Web App and accessing data of interest.
  
 ### **1. All monitoring ground samples on the 20km x 20km NFI grid established to date in the Cariboo TSAs.**  

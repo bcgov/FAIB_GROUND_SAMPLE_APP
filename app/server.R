@@ -243,7 +243,19 @@ server <- function(input, output, session) {
   
   ## Create scatterplot object the plotOutput function is expecting
   ## set the pallet for mapping
-  pal1 <- colorFactor(palette = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),  sp_samplePoints$sampletype)
+  
+  pal1 <- colorFactor(palette = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),  
+                      sp_samplePoints$sampletype)
+  pal1 <- colorFactor(palette = c( "#e69f00", "#009e73","#f0e442", "#0072b2","#BEBADA", '#d55e00', "#cc79a7"),  
+                      sp_samplePoints$sampletype)
+  
+  #pal2 <- c("CMI" = "#e69f00",
+  #               "NFI" = "#009e73",
+  #               "PSP" = "#f0e442",
+  #               "SUP" = "#0072b2",
+  #               "VRI" = "#d55e00",
+  #               "YSM" = "#cc79a7")
+  
   ## render the leaflet map  
   output$map <- renderLeaflet({ 
     m <- leaflet(sp_samplePoints, options = leafletOptions(doubleClickZoom= TRUE, minZoom = 5)) %>% 
@@ -259,6 +271,7 @@ server <- function(input, output, session) {
                          radius = 6,
                          group = "points",
                          color = ~pal1(sampletype), 
+                         #color = ~pal2[sampletype], 
                          stroke = FALSE, fillOpacity = 1,
                          clusterOptions = markerClusterOptions(disableClusteringAtZoom = 7), 
                          label = sp_samplePoints$samp_id, 
@@ -279,7 +292,10 @@ server <- function(input, output, session) {
                   popup = tsa_sp$administrative_area_name)%>%
       addScaleBar(position = "bottomright") %>%
       addControl(filemap,position="bottomleft") %>%
-      addLegend("bottomright", pal = pal1, values = c("CMI","NFI","PSP","SUP", "VRI","YSM" ), title = "Sample Type", opacity = 1) %>%
+      addLegend("bottomright", pal = pal1, 
+                #values = c("CMI","NFI","PSP","SUP", "VLT","VRI","YSM" ), 
+                values = c("CMI","NFI","PSP","SUP", "VRI","YSM" ), 
+                title = "Sample Type", opacity = 1) %>%
     addDrawToolbar(
       editOptions = editToolbarOptions(edit = TRUE, remove = TRUE, selectedPathOptions = NULL,
                                        allowIntersection = FALSE),
@@ -323,7 +339,10 @@ server <- function(input, output, session) {
                      color = factor(data$sampletype, levels = c("CMI","NFI","PSP","SUP", "VRI","YSM")),
                      colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),
                      hoverinfo = 'text',
-                     text = data$sampletype,
+                     text = data$samp_id,
+                     hovertemplate = paste('<b>%{text}</b>',
+                                           '<br><i>Age</i>: %{x} yrs',
+                                           '<br><i>Volume</i>: %{y} cubic m'),
                      key = ~key ,
                      type = "scatter",
                      mode = "markers")
@@ -368,7 +387,7 @@ server <- function(input, output, session) {
           y = ~percent,
           type = 'bar',
           color = ~X1,
-          colors = colorRampPalette(RColorBrewer::brewer.pal(8, "Set2"))(10)
+          colors = colorRampPalette(RColorBrewer::brewer.pal(10, "Set3"))(10)
         )
         
         if (dim(spdataagg)[1]>10) {
@@ -448,15 +467,18 @@ server <- function(input, output, session) {
         
         p <- plot_ly(
           data = becdat,
-          labels = ~Var1, values = ~round(Freq, 2), type = 'pie'
+          labels = ~Var1, values = ~round(Freq, 4), 
+          type = 'pie', textposition = 'inside'
         )
         
         p <- p %>% layout(xaxis = list(title = "BEC"))
         
         # ggplotly(p) %>%
         p %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "BEC", automargin = TRUE)),
-                   legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
+          layout(  autosize=TRUE, dragmode = 'lasso',#, xaxis = (list(autorange = TRUE, title = "BEC", automargin = TRUE)),
+                   legend = list(x = 0.2, y = 0.9, orientation = 'v'), 
+                   margin = list(r = 20, b = 0, t = 0, pad = 4)
+                   )%>%
           config(displayModeBar = F)}
       
       else{
@@ -481,16 +503,20 @@ server <- function(input, output, session) {
         
         p <- plot_ly(
           data = sampletypedat,
-          x = ~as.numeric(as.character(Var1)),  
+          x = ~as.integer(as.character(Var1)),  
           type = 'bar',
           y = ~Freq,
           name = ~Var2,
-          color = ~Var2
+          color = factor(sampletypedat$Var2, levels = c("CMI","NFI","PSP","SUP", "VRI","YSM")),
+          #pal = pal1
+          colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7")#,
+          #color = ~Var2
+          
         ) %>% layout(barmode = 'stack', xaxis = list(title = "Year"), yaxis = list(title = "Measurement Count"))
         
         # ggplotly(p) %>%
         p %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE)),
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE, tickformat='d', type='category')),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
           config(displayModeBar = F)}
       
@@ -500,7 +526,7 @@ server <- function(input, output, session) {
                      y = dummyData$wsvha_liv,
                      type = "scatter",
                      mode = "markers") %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE)),
+          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(range = c(0, 100), title = "Year", automargin = TRUE, tickformat='d')),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
                    yaxis = (list(range = c(0, 100),title = "Measurement Count")))%>%
           config(displayModeBar = F)
@@ -522,7 +548,10 @@ server <- function(input, output, session) {
           data = meascount,
           x = ~VISIT_NUMBER,
           y = ~N,
-          color= ~SAMPLE_ESTABLISHMENT_TYPE,
+          #color= ~SAMPLE_ESTABLISHMENT_TYPE,
+          color = factor(meascount$SAMPLE_ESTABLISHMENT_TYPE, levels = c("CMI","NFI","PSP","SUP", "VRI","YSM")),
+          #pal = pal1
+          colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),
           type = 'bar'
         ) 
         

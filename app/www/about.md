@@ -1,9 +1,9 @@
-# **Open Data**
+## **Open Data**
 All the data shared is subject to the Open Government Licence of British Columbia
 
 <a href="https://www2.gov.bc.ca/gov/content/data/open-data/open-government-licence-bc" target="_blank">For More Info</a>
 
-## **Sample Types**
+### **Sample Types**
 
 #### **Plot types with generalized coordinates**
 Generalized coordinates are provided for the three plot types that make up the Provincial Monitoring Program so that unbiased change on the landscape can be monitored over time. 
