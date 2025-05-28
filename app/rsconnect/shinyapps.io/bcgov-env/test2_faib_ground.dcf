@@ -5,8 +5,9 @@ account: bcgov-env
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11370765
-bundleId: 8313907
+bundleId: 8335381
 url: https://bcgov-env.shinyapps.io/test2_faib_ground/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: data_dictionary_old.csv
