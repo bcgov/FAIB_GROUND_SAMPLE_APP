@@ -48,10 +48,13 @@ ui <- tagList(
                           tags$head(
                             tags$style(HTML('#projDesHelp{color:black}'))
                           ),
-                          column(width = 9, box(width=NULL,leafletOutput("map", height = 550)),
-                                 box(width=NULL, height = 260,
-                                     title=h3("Ground Sample Description at Last Measurement", 
-                                              style = 'font-size:14px;color:black;font-weight:bold;'),
+                          column(width = 9, 
+                                 box(id = 'mapbox', width=NULL,leafletOutput("map", height = 550)),
+                                 box(id = 'graphbox', width=NULL, height = 250,
+                                     #title=h3("Ground Sample Description at Last Measurement", 
+                                     #         style = 'font-size:16px;color:black;font-weight:bold;'),
+                                     h3("Ground Sample Description at Last Measurement", 
+                                        style = 'font-size:14px;color:black;font-weight:bold;'),
                                      tabBox(width = NULL,
                                             # The id lets us use input$tabset1 on the server to find the current tab
                                             id = "tabset1"#, height = "0"
@@ -71,6 +74,8 @@ ui <- tagList(
                                      
                                  )
                           ),
+                          tags$head(tags$style('#mapbox .box-header{ display: none}')), 
+                          tags$head(tags$style('#graphbox .box-header{ display: none}')), 
                           
                           column(
                             tags$head(tags$style(HTML("#tsa ~ .selectize-control 
@@ -141,14 +146,14 @@ ui <- tagList(
                                                  inline = TRUE)
                             ),
                             
-                            box( 
+                            box( title = "Download Data ",  
                               closable = FALSE, 
                               status = "primary", 
                               solidHeader = TRUE, 
                               collapsible = FALSE,
                               collapsed = FALSE,
                               width = NULL,
-                              actionButton("db", "Export Data as CSV", width="100%")
+                              actionButton("db", "Export as CSV", width="100%")
                             )
                             
                           )

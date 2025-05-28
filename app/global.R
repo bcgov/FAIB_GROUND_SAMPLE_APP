@@ -26,6 +26,7 @@ library(feather)
 library(sp)
 library(waiter)
 library(data.table)
+library(gt)
 #-------------------------------------------------------------------------------------------------
 #Functions for retrieving data from the postgres server (vector, raster and tables)
 #-------------------------------------------------------------------------------------------------
