@@ -2,8 +2,8 @@
 library(feather)
 library(data.table)
 data <- read.csv("GROUND_SAMPLE_DATA//shiny_sample_site_2023May25.csv", stringsAsFactors = FALSE)
-data <- read.csv("//sfp.idir.bcgov/S164/S63016/!Workgrp/Inventory/Compilation/ismc/forpublish/data_catalogue/data_catalogue20250514//publish_shiny_app/shiny_sample_site.csv", stringsAsFactors = FALSE)
-dataDict <- read.csv("//sfp.idir.bcgov/s164/S63016/!Workgrp/Inventory/Compilation/ismc/forpublish/data_catalogue/data_catalogue20250514/publish_shiny_app/data_dictionary.csv")
+data <- read.csv("data_catalogue20250514//publish_shiny_app/shiny_sample_site.csv", stringsAsFactors = FALSE)
+dataDict <- read.csv("data_catalogue20250514/publish_shiny_app/data_dictionary.csv")
 data$objectid <- seq.int(nrow(data))
 
 data$YSM_MAIN_FM[data$YSM_MAIN_FM == ''] <- "N/A"
