@@ -80,9 +80,9 @@ server <- function(input, output, session) {
       if(input$prj == 'All'){
       spatial <- subset(sp_samplePoints, tsa_desc %in% input$tsa & bgc_zone %in% input$bec & ( sampletype %in% input$cbSType | psp_act %in% input$sts) )}
       if(input$prj == 'YSM Main'){
-        spatial <- subset(sp_samplePoints, tsa_desc %in% input$tsa & bgc_zone %in% input$bec & ysm_main %in% "Y"  & ( sampletype %in% input$cbSType | psp_act %in% input$sts) )}
+        spatial <- subset(sp_samplePoints, tsa_desc %in% input$tsa & bgc_zone %in% input$bec & ysm_main %in% c("Y") & ( sampletype %in% input$cbSType | psp_act %in% input$sts) )}
       if(input$prj == 'Mat Main'){
-        spatial <- subset(sp_samplePoints, tsa_desc %in% input$tsa & bgc_zone %in% input$bec & ysm_main %in% "N" &  ( sampletype %in% input$cbSType | psp_act %in% input$sts) )}
+        spatial <- subset(sp_samplePoints, tsa_desc %in% input$tsa & bgc_zone %in% input$bec & mat_main %in% c("Y") & ( sampletype %in% input$cbSType | psp_act %in% input$sts) )}
       if(nrow(spatial) == 0){
         spatial <- NULL}
     }

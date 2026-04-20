@@ -53,8 +53,8 @@ br2 <- function() tagList(br(), br())
 myDrawPolygonOptions <- function(allowIntersection = FALSE,
                                  guidelineDistance = 20,
                                  drawError = list(color = "#b00b00", timeout = 2500),
-                                 shapeOptions = list(stroke = TRUE, color = '#003366', weight = 3,
-                                                     fill = TRUE, fillColor = '#003366', fillOpacity = 0.1,
+                                 shapeOptions = list(stroke = TRUE, weight = 3, color = '#007FFF', #color = '#003366', 
+                                                     fill = TRUE, fillOpacity = 0.1, fillColor = '#007FFF', #fillColor = '#003366',
                                                      clickable = TRUE), metric = TRUE, zIndexOffset = 2000, repeatMode = FALSE, showArea = TRUE)
 {
   if (isTRUE(showArea) && isTRUE(allowIntersection)) {

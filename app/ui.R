@@ -59,7 +59,11 @@ ui <- tagList(
                                             # The id lets us use input$tabset1 on the server to find the current tab
                                             id = "tabset1"#, height = "0"
                                             , tabPanel("Volume/Age",  plotlyOutput('age', height = "250px"))
-                                            , tabPanel("Species",  plotlyOutput('species', height = "250px"))
+                                            , tabPanel("Species",  plotlyOutput('species', height = "250px"),
+                                                       div(
+                                                         "This is a simple summary of all selected samples, regardless of sampling design. Sampling design weights were not incorporated.",
+                                                         style = "font-size:10px; color:#666; margin-bottom:6px;"
+                                                       ))
                                             #, tabPanel("BA by Year",  plotlyOutput('BAbyyear', height = "250px"))
                                             , tabPanel("BEC Zone",  plotlyOutput('BEC', height = "250px"))
                                             , tabPanel("Measurement Year",  plotlyOutput('Samples', height = "250px"))
