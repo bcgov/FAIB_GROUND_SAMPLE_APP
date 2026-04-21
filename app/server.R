@@ -543,6 +543,7 @@ server <- function(input, output, session) {
         tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID & LAST_MSMT =="Y"))
         
         meascount <- tabledata[, .N, by = list(VISIT_NUMBER, SAMPLE_ESTABLISHMENT_TYPE)]
+        meascount$VISIT_NUMBER <- as.character(meascount$VISIT_NUMBER)
         
         p <- plot_ly(
           data = meascount,
@@ -556,7 +557,15 @@ server <- function(input, output, session) {
         ) 
         
         #p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
-        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', xaxis = list(title = "Visit Number", tickformat=',d'))
+        p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', 
+                          xaxis = list(
+                            title = "Visit Number",
+                            tickmode = "array",
+                            tickformat=',d',
+                            #tickvals = xvals,      # only show ticks at actual bars
+                            #ticktext = xvals,
+                            dtick = 1              # optional extra safeguard
+                          ))
         
         # ggplotly(p) %>%
         p %>%
