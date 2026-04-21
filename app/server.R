@@ -562,8 +562,6 @@ server <- function(input, output, session) {
                             title = "Visit Number",
                             tickmode = "array",
                             tickformat=',d',
-                            #tickvals = xvals,      # only show ticks at actual bars
-                            #ticktext = xvals,
                             dtick = 1              # optional extra safeguard
                           ))
         
@@ -723,7 +721,7 @@ server <- function(input, output, session) {
 # 
   observeEvent(input$db, {
       #Create a CSV to download
-      output$downloadCSV <<- downloadHandler(
+      output$downloadCSV <- downloadHandler(
         filename = paste("bc_sample_data-", Sys.Date(), ".zip", sep=""),
         content = function(fname) {
           fs <- c("data_dictionary.csv", "bc_sample_data.csv")
