@@ -758,7 +758,7 @@ server <- function(input, output, session) {
           
         },
         contentType = "application/zip")
-      jsinject <- "setTimeout(function(){window.open($('#downloadCSV').attr('href'))}, 100);"
+      jsinject <- "setTimeout(function(){window.open($('#downloadCSV').attr('href'))}, 500);"
       session$sendCustomMessage(type = 'jsCode', list(value = jsinject))
     
   })
