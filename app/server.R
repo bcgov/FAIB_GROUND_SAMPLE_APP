@@ -725,36 +725,35 @@ server <- function(input, output, session) {
         filename = paste("bc_sample_data-", Sys.Date(), ".zip", sep=""),
         content = function(fname) {
           
-          #fs <- c("data_dictionary.csv", "bc_sample_data.csv")
-          #where <- toString(shQuote(masterTable()$samp_id))
-          #write.csv(sampleData[sampleData$SITE_IDENTIFIER %in% masterTable()$samp_id,] , file = "bc_sample_data.csv")
-          #write.csv(read_feather("www/dataDict"), file = "data_dictionary.csv")
-#
-          #zip(zipfile=fname, files=fs)
-          #if(file.exists(paste0(fname, ".zip"))) {file.rename(paste0(fname, ".zip"), fname)}
-          td <- tempdir()
-          
-          data_file <- file.path(td, "bc_sample_data.csv")
-          dict_file <- file.path(td, "data_dictionary.csv")
-          
-          write.csv(
-            sampleData[
-              sampleData$SITE_IDENTIFIER %in% masterTable()$samp_id,
-            ],
-            data_file,
-            row.names = FALSE
-          )
-          
-          write.csv(
-            read_feather("www/dataDict"),
-            dict_file,
-            row.names = FALSE
-          )
-          
-          zip(
-            zipfile = fname,
-            files = c(data_file, dict_file)
-          )
+          fs <- c("data_dictionary.csv", "bc_sample_data.csv")
+          where <- toString(shQuote(masterTable()$samp_id))
+          write.csv(sampleData[sampleData$SITE_IDENTIFIER %in% masterTable()$samp_id,] , file = "bc_sample_data.csv")
+          write.csv(read_feather("www/dataDict"), file = "data_dictionary.csv")
+          zip(zipfile=fname, files=fs)
+          if(file.exists(paste0(fname, ".zip"))) {file.rename(paste0(fname, ".zip"), fname)}
+          #td <- tempdir()
+          #
+          #data_file <- file.path(td, "bc_sample_data.csv")
+          #dict_file <- file.path(td, "data_dictionary.csv")
+          #
+          #write.csv(
+          #  sampleData[
+          #    sampleData$SITE_IDENTIFIER %in% masterTable()$samp_id,
+          #  ],
+          #  data_file,
+          #  row.names = FALSE
+          #)
+          #
+          #write.csv(
+          #  read_feather("www/dataDict"),
+          #  dict_file,
+          #  row.names = FALSE
+          #)
+          #
+          #zip(
+          #  zipfile = fname,
+          #  files = c(data_file, dict_file)
+          #)
           
         },
         contentType = "application/zip")
