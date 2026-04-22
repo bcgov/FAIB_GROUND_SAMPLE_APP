@@ -500,10 +500,11 @@ server <- function(input, output, session) {
       if (!is.null(data)){
         
         sampletypedat<-as.data.frame(table(data$meas_dt, data$sampletype))
+        sampletypedat$Year <- as.integer(as.character(sampletypedat$Var1))
         
         p <- plot_ly(
           data = sampletypedat,
-          x = ~as.integer(as.character(Var1)),  
+          x = ~Year,  
           type = 'bar',
           y = ~Freq,
           name = ~Var2,
@@ -512,11 +513,14 @@ server <- function(input, output, session) {
           colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7")#,
           #color = ~Var2
           
-        ) %>% layout(barmode = 'stack', xaxis = list(title = "Year"), yaxis = list(title = "Measurement Count"))
+        ) %>% layout(barmode = 'stack', xaxis = list(title = "Year", type='linear', dtick = 1), 
+                     yaxis = list(title = "Measurement Count"))
         
         # ggplotly(p) %>%
         p %>%
-          layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE, tickformat='d', type='category')),
+          layout(  autosize=TRUE, dragmode = 'lasso', 
+                   #xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE, 
+                   #              tickformat='d')),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
           config(displayModeBar = F)}
       
@@ -543,24 +547,21 @@ server <- function(input, output, session) {
         tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID & LAST_MSMT =="Y"))
         
         meascount <- tabledata[, .N, by = list(VISIT_NUMBER, SAMPLE_ESTABLISHMENT_TYPE)]
-        meascount$VISIT_NUMBER <- as.character(meascount$VISIT_NUMBER)
+        meascount$VISIT_NUMBER <- as.integer(as.character(meascount$VISIT_NUMBER))
         
         p <- plot_ly(
           data = meascount,
           x = ~VISIT_NUMBER,
           y = ~N,
-          #color= ~SAMPLE_ESTABLISHMENT_TYPE,
           color = factor(meascount$SAMPLE_ESTABLISHMENT_TYPE, levels = c("CMI","NFI","PSP","SUP", "VRI","YSM")),
-          #pal = pal1
           colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),
           type = 'bar'
         ) 
         
-        #p <- p %>% add_trace(y = ~BA_HA_DS, name = 'Dead Standing')
         p <- p %>% layout(yaxis = list(title = 'Count'), barmode = 'group', 
                           xaxis = list(
                             title = "Visit Number",
-                            tickmode = "array",
+                            tickmode = "linear",
                             tickformat=',d',
                             dtick = 1              # optional extra safeguard
                           ))
@@ -731,29 +732,6 @@ server <- function(input, output, session) {
           write.csv(read_feather("www/dataDict"), file = "data_dictionary.csv")
           zip(zipfile=fname, files=fs)
           if(file.exists(paste0(fname, ".zip"))) {file.rename(paste0(fname, ".zip"), fname)}
-          #td <- tempdir()
-          #
-          #data_file <- file.path(td, "bc_sample_data.csv")
-          #dict_file <- file.path(td, "data_dictionary.csv")
-          #
-          #write.csv(
-          #  sampleData[
-          #    sampleData$SITE_IDENTIFIER %in% masterTable()$samp_id,
-          #  ],
-          #  data_file,
-          #  row.names = FALSE
-          #)
-          #
-          #write.csv(
-          #  read_feather("www/dataDict"),
-          #  dict_file,
-          #  row.names = FALSE
-          #)
-          #
-          #zip(
-          #  zipfile = fname,
-          #  files = c(data_file, dict_file)
-          #)
           
         },
         contentType = "application/zip")
