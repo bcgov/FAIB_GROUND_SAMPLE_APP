@@ -60,19 +60,6 @@ server <- function(input, output, session) {
   }
   #
   
-  #################
-  # table1 <-reactive({
-  #     table1 <- data.frame(input$sts)
-  # 
-  # })
-  # 
-  # table2 <-reactive({
-  #   table2 <- data.frame(input$cbSType)
-  # 
-  # })
-  ###########
-  
-  
   #Filter based on map selection
   sp_samplePoints_r <-reactive({
 
@@ -186,10 +173,6 @@ server <- function(input, output, session) {
       if(!"shp" %in% fileList | !"shp" %in% fileList | !"dbf" %in% fileList | !"shx" %in% fileList )
       { shpValid <- FALSE
       showModal(warningModal)}
-      # if("shp" %in% fileList)
-      # { print ("yes")}
-
-
 
       if (shpValid){
         # Rename files
@@ -197,7 +180,6 @@ server <- function(input, output, session) {
           file.rename(shpdf$datapath[i], paste0(tempdirname, "/", shpdf$name[i]))
         }
         tryCatch(
-          #{outShp <-  spTransform(readOGR(paste0(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), CRS("+init=epsg:4326"))},
           {outShp <-  st_transform(st_read(paste(tempdirname, shpdf$name[grep(pattern = "*.shp$", shpdf$name)], sep = "/")), 4326)}
           ,
           error=function(cond) {
@@ -227,36 +209,15 @@ server <- function(input, output, session) {
     else d$key})
 
   
-  #--------  
-  # Outputs 
-  # output$table1 <- renderDataTable(req(table1()))
-  # output$table2 <- renderDataTable(req(table2()))
-   #output$table3 <- renderDataTable(req( sp_samplePoints_r()))
- 
-  # memUsed <- function() {paste0(round(mem_used()/1000000,3)," mb")}
-  
-  # output$"Memory"<-renderText({
-  #   invalidateLater(10)
-  #   memUsed()
-  # })
-  
-  
   ## Create scatterplot object the plotOutput function is expecting
   ## set the pallet for mapping
   
-  pal1 <- colorFactor(palette = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),  
-                      sp_samplePoints$sampletype)
+  #pal1 <- colorFactor(palette = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7"),  
+  #                    sp_samplePoints$sampletype)
   pal1 <- colorFactor(palette = c( "#e69f00", "#009e73","#f0e442", "#0072b2","#BEBADA", '#d55e00', "#cc79a7"),  
                       sp_samplePoints$sampletype)
   
-  #pal2 <- c("CMI" = "#e69f00",
-  #               "NFI" = "#009e73",
-  #               "PSP" = "#f0e442",
-  #               "SUP" = "#0072b2",
-  #               "VRI" = "#d55e00",
-  #               "YSM" = "#cc79a7")
   
-  ## render the leaflet map  
   output$map <- renderLeaflet({ 
     m <- leaflet(sp_samplePoints, options = leafletOptions(doubleClickZoom= TRUE, minZoom = 5)) %>% 
       setView(-121.7476, 53.7267, 5) %>%
@@ -271,7 +232,6 @@ server <- function(input, output, session) {
                          radius = 6,
                          group = "points",
                          color = ~pal1(sampletype), 
-                         #color = ~pal2[sampletype], 
                          stroke = FALSE, fillOpacity = 1,
                          clusterOptions = markerClusterOptions(disableClusteringAtZoom = 7), 
                          label = sp_samplePoints$samp_id, 
@@ -293,7 +253,6 @@ server <- function(input, output, session) {
       addScaleBar(position = "bottomright") %>%
       addControl(filemap,position="bottomleft") %>%
       addLegend("bottomright", pal = pal1, 
-                #values = c("CMI","NFI","PSP","SUP", "VLT","VRI","YSM" ), 
                 values = c("CMI","NFI","PSP","SUP", "VRI","YSM" ), 
                 title = "Sample Type", opacity = 1) %>%
     addDrawToolbar(
@@ -347,7 +306,6 @@ server <- function(input, output, session) {
                      type = "scatter",
                      mode = "markers")
 
-        # ggplotly(p) %>%
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Age", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
@@ -366,7 +324,6 @@ server <- function(input, output, session) {
                    yaxis = (list(range = c(0, 100),title = expression('Whole Stem Volume/ha'~~('m'^3)))))%>%
           config(displayModeBar = F)
 
-        # ggplotly(p) %>%
         p} })
     
     output$species <- renderPlotly({
@@ -397,7 +354,6 @@ server <- function(input, output, session) {
                                      text = "*Only the ten most frequently occurring species are displayed.")
         }
         
-        # ggplotly(p) %>%
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(autorange = TRUE, title = "Species", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
@@ -416,7 +372,6 @@ server <- function(input, output, session) {
                    yaxis = (list(range = c(0, 100),title = "% of Total Live BA")))%>%
           config(displayModeBar = F)
         
-        # ggplotly(p) %>%
         p} })
     
     #output$BAbyyear <- renderPlotly({
@@ -473,7 +428,6 @@ server <- function(input, output, session) {
         
         p <- p %>% layout(xaxis = list(title = "BEC"))
         
-        # ggplotly(p) %>%
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso',#, xaxis = (list(autorange = TRUE, title = "BEC", automargin = TRUE)),
                    legend = list(x = 0.2, y = 0.9, orientation = 'v'), 
@@ -492,7 +446,6 @@ server <- function(input, output, session) {
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4))%>%
           config(displayModeBar = F)
         
-        # ggplotly(p) %>%
         p} })
     
     
@@ -509,14 +462,11 @@ server <- function(input, output, session) {
           y = ~Freq,
           name = ~Var2,
           color = factor(sampletypedat$Var2, levels = c("CMI","NFI","PSP","SUP", "VRI","YSM")),
-          #pal = pal1
-          colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7")#,
-          #color = ~Var2
+          colors = c( "#e69f00", "#009e73","#f0e442", "#0072b2", '#d55e00', "#cc79a7")
           
         ) %>% layout(barmode = 'stack', xaxis = list(title = "Year", type='linear', dtick = 1), 
                      yaxis = list(title = "Measurement Count"))
         
-        # ggplotly(p) %>%
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', 
                    #xaxis = (list(autorange = TRUE, title = "Year", automargin = TRUE, 
@@ -535,7 +485,6 @@ server <- function(input, output, session) {
                    yaxis = (list(range = c(0, 100),title = "Measurement Count")))%>%
           config(displayModeBar = F)
         
-        # ggplotly(p) %>%
         p} })
     
     
@@ -543,7 +492,6 @@ server <- function(input, output, session) {
       if (!is.null(data)){
         
         sampleID <- sort(unique(data$samp_id))
-        #tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID))
         tabledata <- setDT(subset(sampleData, SITE_IDENTIFIER %in% sampleID & LAST_MSMT =="Y"))
         
         meascount <- tabledata[, .N, by = list(VISIT_NUMBER, SAMPLE_ESTABLISHMENT_TYPE)]
@@ -566,7 +514,6 @@ server <- function(input, output, session) {
                             dtick = 1              # optional extra safeguard
                           ))
         
-        # ggplotly(p) %>%
         p %>%
           layout(  autosize=TRUE, dragmode = 'lasso', xaxis = (list(title = "Visit Number", automargin = TRUE)),
                    legend = list(orientation = 'h',  y = 100), margin = list(r = 20, b = 50, t = 50, pad = 4),
@@ -584,7 +531,6 @@ server <- function(input, output, session) {
                    yaxis = (list(range = c(0, 100),title = "Count")))%>%
           config(displayModeBar = F)
         
-        # ggplotly(p) %>%
         p} })
     
      }

@@ -85,7 +85,6 @@ sp_samplePoints[i] <- lapply(sp_samplePoints[i], as.character)
 sampleTypes <-  sort(unique(sp_samplePoints$sampletype))
 tsaBnds <- sort(unique(sp_samplePoints$tsa_desc ))
 becLst <- sort(unique(sp_samplePoints$bgc_zone ))
-#prjdes <- sort(unique(sp_samplePoints$project_design ))
 
 sampleData <- read_feather("www//export_ground_samples")
 

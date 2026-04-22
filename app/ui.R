@@ -51,8 +51,6 @@ ui <- tagList(
                           column(width = 9, 
                                  box(id = 'mapbox', width=NULL,leafletOutput("map", height = 550)),
                                  box(id = 'graphbox', width=NULL, height = 250,
-                                     #title=h3("Ground Sample Description at Last Measurement", 
-                                     #         style = 'font-size:16px;color:black;font-weight:bold;'),
                                      h3("Ground Sample Description at Last Measurement", 
                                         style = 'font-size:14px;color:black;font-weight:bold;'),
                                      tabBox(width = NULL,
@@ -70,9 +68,6 @@ ui <- tagList(
                                             # ####FOR DEBUG####
                                             , tabPanel("Measurement Count",  plotlyOutput('MeasCount', height = "250px"))
                                             ,
-                                            # tabPanel("Volume/Age",dataTableOutput("table1")),
-                                            # tabPanel("Volume/Age",dataTableOutput("table3")),
-                                            #tabPanel("Memory",textOutput("Memory"))
                                             
                                      )
                                      
