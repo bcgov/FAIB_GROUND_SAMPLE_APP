@@ -51,24 +51,23 @@ ui <- tagList(
                           column(width = 9, 
                                  box(id = 'mapbox', width=NULL,leafletOutput("map", height = 550)),
                                  box(id = 'graphbox', width=NULL, height = 250,
-                                     #title=h3("Ground Sample Description at Last Measurement", 
-                                     #         style = 'font-size:16px;color:black;font-weight:bold;'),
                                      h3("Ground Sample Description at Last Measurement", 
                                         style = 'font-size:14px;color:black;font-weight:bold;'),
                                      tabBox(width = NULL,
                                             # The id lets us use input$tabset1 on the server to find the current tab
                                             id = "tabset1"#, height = "0"
                                             , tabPanel("Volume/Age",  plotlyOutput('age', height = "250px"))
-                                            , tabPanel("Species",  plotlyOutput('species', height = "250px"))
+                                            , tabPanel("Species",  plotlyOutput('species', height = "250px"),
+                                                       div(
+                                                         "This is a simple summary of all selected samples, regardless of sampling design. Sampling design weights were not incorporated.",
+                                                         style = "font-size:10px; color:#666; margin-bottom:6px;"
+                                                       ))
                                             #, tabPanel("BA by Year",  plotlyOutput('BAbyyear', height = "250px"))
                                             , tabPanel("BEC Zone",  plotlyOutput('BEC', height = "250px"))
                                             , tabPanel("Measurement Year",  plotlyOutput('Samples', height = "250px"))
                                             # ####FOR DEBUG####
                                             , tabPanel("Measurement Count",  plotlyOutput('MeasCount', height = "250px"))
                                             ,
-                                            # tabPanel("Volume/Age",dataTableOutput("table1")),
-                                            # tabPanel("Volume/Age",dataTableOutput("table3")),
-                                            #tabPanel("Memory",textOutput("Memory"))
                                             
                                      )
                                      
